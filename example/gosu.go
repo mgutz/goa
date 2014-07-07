@@ -6,6 +6,7 @@ import (
 	"github.com/mgutz/gosu"
 )
 
+// Project is gosu's project function.
 func Project(p *gosu.Project) {
 	p.Task("default", []string{"add-headers", "bundle-scripts"})
 

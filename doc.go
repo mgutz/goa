@@ -1,5 +1,5 @@
-// Goa is short for Go assets pipeline. Goa passes file assets through
-// a pipeline, in which each asset is processed by a filter.
+// Package goa passes file assets through a pipeline, in which each asset
+// is processed by a one or more filters.
 //
 // Goa can be used in any project but it synergizes well with Gosu.
 //

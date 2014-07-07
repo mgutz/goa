@@ -18,7 +18,7 @@ func Cat(join string, dest string) func(*goa.Pipeline) error {
 			buffer.Write(asset.Bytes())
 		}
 
-		// removes existing asset
+		// removes existing assets
 		pipeline.Truncate()
 
 		// add new asset for the concatenated buffer

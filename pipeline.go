@@ -9,12 +9,12 @@ import (
 // files this could be something as simple as adding a header or
 // minification. Some filters process assets in batches combining them,
 // for example concatenating JavaScript or CSS.
-//
 type Pipeline struct {
 	Assets  []*Asset
 	Filters []interface{}
 }
 
+// NewPipeline creates a new pipeline with empty assets.
 func NewPipeline() *Pipeline {
 	return &Pipeline{Assets: []*Asset{}}
 }
