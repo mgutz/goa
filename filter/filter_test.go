@@ -22,7 +22,7 @@ func TestAddHeader(t *testing.T) {
 }
 
 func TestLoad(t *testing.T) {
-	pipeline := goa.NewPipeline()
+	pipeline, _ := goa.Pipe()
 	batcher := Load("test/**/*.txt")
 	batcher(pipeline)
 
@@ -65,11 +65,10 @@ func TestWrite(t *testing.T) {
 }
 
 func TestCat(t *testing.T) {
-	pi := goa.NewPipeline()
-	pi.Pipe(
+	pi, _ := goa.Pipe(
 		Load("test/**/*.txt"),
 		Cat(";", "dist/cat.txt"),
-	).Run()
+	)
 
 	if len(pi.Assets) != 1 {
 		t.Errorf("should only have 1 asset %+v\n", pi.Assets)
@@ -78,4 +77,14 @@ func TestCat(t *testing.T) {
 		t.Errorf("should join with ; %+v\n", pi.Assets[0].String())
 	}
 	os.RemoveAll("dist")
+}
+
+func TestReplacePattern(t *testing.T) {
+	asst := &goa.Asset{}
+	asst.WriteString("foo")
+	filter := ReplacePattern(`o`, "x")
+	filter(asst)
+	if asst.String() != "fxx" {
+		t.Error("should have replaced pattern")
+	}
 }

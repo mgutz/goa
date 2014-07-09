@@ -1,8 +1,10 @@
 package goa
 
 import (
-	"github.com/mgutz/gosu"
+	"github.com/mgutz/gosu/util"
 )
+
+var Verbose = false
 
 // Pipeline is a asset flow through which each asset is processed by
 // one or more filters. For text
@@ -14,9 +16,11 @@ type Pipeline struct {
 	Filters []interface{}
 }
 
-// NewPipeline creates a new pipeline with empty assets.
-func NewPipeline() *Pipeline {
-	return &Pipeline{Assets: []*Asset{}}
+// Pipe creates a pipeline with filters and runs it.
+func Pipe(filters ...interface{}) (*Pipeline, error) {
+	pipeline := &Pipeline{Assets: []*Asset{}}
+	pipeline.Pipe(filters...).Run()
+	return pipeline, nil
 }
 
 // Pipe adds one or more filters to the pipeline. Pipe may be called
@@ -37,7 +41,6 @@ func NewPipeline() *Pipeline {
 //      //  signature
 //      func(assets []*goa.Asset) error
 //
-//
 // 3. Pipeline handler. Use this to have unbridled control. Load filter
 //    is an example.
 //
@@ -45,31 +48,51 @@ func NewPipeline() *Pipeline {
 //      func(*Pipeline) error
 //
 func (pipeline *Pipeline) Pipe(filters ...interface{}) *Pipeline {
-	for _, filter := range filters {
-		pipeline.Filters = append(pipeline.Filters, filter)
-	}
+	pipeline.Filters = filters
+	// for _, filter := range filters {
+	// 	pipeline.Filters = append(pipeline.Filters, filter)
+	// }
 	return pipeline
 }
 
 // Run runs assets through the pipeline.
 func (pipeline *Pipeline) Run() {
-	for _, filter := range pipeline.Filters {
+	for i, filter := range pipeline.Filters {
+		if i == 1 && len(pipeline.Assets) == 0 {
+			util.Info("goa", "There are 0 assets in pipeline. Check your Load filter. %+v\n", pipeline)
+		}
 		switch fn := filter.(type) {
 		default:
-			gosu.Panicf("pipeline", "Invalid filter type %+v\n", fn)
+			util.Panic("pipeline", "Invalid filter type %+v\n", fn)
 		// receives a single asset, a filter
 		case func(*Asset) error:
+			for _, asset := range pipeline.Assets {
+				err := fn(asset)
+				if err != nil {
+					util.Error("goa", "%+v\n", err)
+					break
+				}
+			}
+		// This should only be used inspections like tap, saves from having to return an error
+		case func(*Asset):
 			for _, asset := range pipeline.Assets {
 				fn(asset)
 			}
 		// receives all assets read-only
 		case func([]*Asset) error:
-			fn(pipeline.Assets)
+			err := fn(pipeline.Assets)
+			if err != nil {
+				util.Error("goa", "%+v\n", err)
+				break
+			}
 		// receives the pipeline, can add remove assets
 		case func(*Pipeline) error:
-			fn(pipeline)
+			err := fn(pipeline)
+			if err != nil {
+				util.Error("goa", "%+v\n", err)
+				break
+			}
 		}
-		pipeline.Filters = append(pipeline.Filters, filter)
 	}
 }
 

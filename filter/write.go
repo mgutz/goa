@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-// Write writes all ssets to the file system.
+// Write writes all assets to the file system.
 func Write() func(assets []*goa.Asset) error {
 	return func(assets []*goa.Asset) error {
 		// cache directories to avoid Mkdirall

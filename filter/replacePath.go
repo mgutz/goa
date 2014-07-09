@@ -2,6 +2,7 @@ package filter
 
 import (
 	"github.com/mgutz/goa"
+	"github.com/mgutz/gosu/util"
 	"strings"
 )
 
@@ -12,12 +13,14 @@ import (
 // This should be used before the Write() filter.
 func ReplacePath(from string, to string) func(*goa.Asset) error {
 	return func(asset *goa.Asset) error {
-		s := asset.WritePath
-		if !strings.HasPrefix(s, from) {
+		oldPath := asset.WritePath
+		if !strings.HasPrefix(oldPath, from) {
 			return nil
 		}
-		s = to + s[len(from):]
-		asset.WritePath = s
+		asset.WritePath = to + oldPath[len(from):]
+		if Verbose {
+			util.Debug("goa", "ReplacePath %s => %s\n", oldPath, asset.WritePath)
+		}
 		return nil
 	}
 }

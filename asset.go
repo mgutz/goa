@@ -2,6 +2,8 @@ package goa
 
 import (
 	"bytes"
+	"fmt"
+	"net/http"
 	"path"
 
 	"github.com/mgutz/gosu"
@@ -14,6 +16,7 @@ type Asset struct {
 	// WritePath is the write destination of the asset.
 	WritePath string
 	Pipeline  *Pipeline
+	mimeType  string
 }
 
 // ChangeExt changes the extesion of asset.WritePath. ChangExt is used
@@ -25,7 +28,46 @@ func (asset *Asset) ChangeExt(newExt string) {
 	asset.WritePath = path.Join(path.Dir(asset.WritePath), base)
 }
 
+// Dump returns a console friendly representation of asset. Note, String()
+// returns the string value of Buffer.
+func (asset *Asset) Dump() string {
+	return fmt.Sprintf("ReadPath: \"%s\" WritePath: \"%s\" MimeType: \"%s\"\n", asset.Info.Path, asset.WritePath, asset.MimeType())
+}
+
 // Ext returns the extension of asset.WritePath.
 func (asset *Asset) Ext() string {
 	return path.Ext(asset.WritePath)
+}
+
+// IsText return true if it thinks this asset is text based, meaning it
+// can be manipulated with string functions.
+func (asset *Asset) IsText() bool {
+	mimeType := asset.MimeType()
+	switch mimeType {
+	default:
+		return true
+	case "application/octet-stream":
+		return false
+	}
+}
+
+// MimeType returns an educated guess of the content type of  asset.
+func (asset *Asset) MimeType() string {
+	if asset.mimeType == "" {
+		// TODO is passing all bytes expensive?
+		asset.mimeType = http.DetectContentType(asset.Buffer.Bytes())
+	}
+	return asset.mimeType
+}
+
+// SetBufferString sets the buffer to a string value.
+func (asset *Asset) RewriteString(s string) {
+	asset.Reset()
+	asset.WriteString(s)
+}
+
+// SetBufferBytes sets the buffer to bytes.
+func (asset *Asset) Rewrite(bytes []byte) {
+	asset.Reset()
+	asset.Write(bytes)
 }
