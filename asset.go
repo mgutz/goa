@@ -19,7 +19,7 @@ type Asset struct {
 	mimeType  string
 }
 
-// ChangeExt changes the extesion of asset.WritePath. ChangExt is used
+// ChangeExt changes the extension of asset.WritePath. ChangExt is used
 // by filters which transpile source. For example, a filter for Markdown
 // would use ChangeExt(".html") to write the asset as an HTML file.
 func (asset *Asset) ChangeExt(newExt string) {
@@ -43,6 +43,7 @@ func (asset *Asset) Ext() string {
 // can be manipulated with string functions.
 func (asset *Asset) IsText() bool {
 	mimeType := asset.MimeType()
+	// TODO more mimes need to be checked
 	switch mimeType {
 	default:
 		return true
@@ -51,7 +52,7 @@ func (asset *Asset) IsText() bool {
 	}
 }
 
-// MimeType returns an educated guess of the content type of  asset.
+// MimeType returns an educated guess of the content type of asset.
 func (asset *Asset) MimeType() string {
 	if asset.mimeType == "" {
 		// TODO is passing all bytes expensive?
@@ -60,13 +61,13 @@ func (asset *Asset) MimeType() string {
 	return asset.mimeType
 }
 
-// SetBufferString sets the buffer to a string value.
+// RewriteString sets the buffer to a string value.
 func (asset *Asset) RewriteString(s string) {
 	asset.Reset()
 	asset.WriteString(s)
 }
 
-// SetBufferBytes sets the buffer to bytes.
+// Rewrite sets the buffer to bytes.
 func (asset *Asset) Rewrite(bytes []byte) {
 	asset.Reset()
 	asset.Write(bytes)

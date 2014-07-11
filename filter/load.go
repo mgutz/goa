@@ -8,10 +8,15 @@ import (
 )
 
 // Load loads all the files from glob patterns and creates the initial
-// asset array for a pipeline.
+// asset array for a pipeline. This loads the entire contents of the file, binary
+// or text, into a buffer. Consider creating your own loader if dealing
+// with large files.
 func Load(patterns ...string) func(*goa.Pipeline) error {
 	return func(pipeline *goa.Pipeline) error {
-		fileAssets, _, _ := gosu.Glob(patterns)
+		fileAssets, _, err := gosu.Glob(patterns)
+		if err != nil {
+			return err
+		}
 
 		for _, info := range fileAssets {
 			if !info.IsDir() {

@@ -8,7 +8,7 @@ import (
 
 // ReplacePath replaces the leading part of a path in all assets.
 //
-//      ReplacePath("views/", "dist/views")
+//      ReplacePath("src/", "dist/")
 //
 // This should be used before the Write() filter.
 func ReplacePath(from string, to string) func(*goa.Asset) error {

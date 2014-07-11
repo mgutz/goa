@@ -4,10 +4,10 @@ import (
 	"regexp"
 
 	"github.com/mgutz/goa"
-	"github.com/mgutz/gosu/util"
+	//"github.com/mgutz/gosu/util"
 )
 
-// ReplacePath replaces the leading part of a path in all assets.
+// ReplacePattern replaces the leading part of a path in all assets.
 //
 //      ReplacePath("views/", "dist/views")
 //
@@ -20,8 +20,6 @@ func ReplacePattern(pattern, repl string) func(*goa.Asset) error {
 			if s != "" {
 				asset.RewriteString(re.ReplaceAllString(s, repl))
 			}
-		} else {
-			util.Debug("dbg", "Asset is not text, mimeType %s\n", asset.MimeType())
 		}
 		return nil
 	}

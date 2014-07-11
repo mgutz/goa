@@ -3,13 +3,26 @@ package filter
 import (
 	//"log"
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
 
 	"github.com/mgutz/goa"
+	"github.com/mgutz/str"
 )
+
+func newAssetText(s, writePath string) *goa.Asset {
+	asst := &goa.Asset{WritePath: writePath}
+	asst.WriteString(s)
+	return asst
+}
+
+func egAsset(asst *goa.Asset, filter func(asset *goa.Asset) error) {
+	filter(asst)
+	fmt.Println(asst.String())
+}
 
 func TestAddHeader(t *testing.T) {
 	asst := &goa.Asset{}
@@ -18,6 +31,12 @@ func TestAddHeader(t *testing.T) {
 	filter(asst)
 	if asst.String() != "barfoo" {
 		t.Error("should have prepended bar")
+	}
+
+	// try add again
+	filter(asst)
+	if asst.String() != "barfoo" {
+		t.Error("should be idempotent")
 	}
 }
 
@@ -52,8 +71,8 @@ func TestReplaceLeft(t *testing.T) {
 func TestWrite(t *testing.T) {
 	os.RemoveAll("tmp")
 	assets := []*goa.Asset{
-		&goa.Asset{WritePath: "tmp/foo.txt", Buffer: *bytes.NewBufferString("foo")},
-		&goa.Asset{WritePath: "tmp/bar.txt", Buffer: *bytes.NewBufferString("bar")},
+		{WritePath: "tmp/foo.txt", Buffer: *bytes.NewBufferString("foo")},
+		{WritePath: "tmp/bar.txt", Buffer: *bytes.NewBufferString("bar")},
 	}
 	filter := Write()
 	filter(assets)
@@ -73,18 +92,22 @@ func TestCat(t *testing.T) {
 	if len(pi.Assets) != 1 {
 		t.Errorf("should only have 1 asset %+v\n", pi.Assets)
 	}
-	if !strings.Contains(pi.Assets[0].String(), ";2.txt") {
-		t.Errorf("should join with ; %+v\n", pi.Assets[0].String())
+
+	s := str.Clean(pi.Assets[0].String())
+	if !strings.Contains(s, ";2.txt") {
+		t.Errorf("should join: %+v\n", s)
 	}
 	os.RemoveAll("dist")
 }
 
-func TestReplacePattern(t *testing.T) {
-	asst := &goa.Asset{}
-	asst.WriteString("foo")
-	filter := ReplacePattern(`o`, "x")
-	filter(asst)
-	if asst.String() != "fxx" {
-		t.Error("should have replaced pattern")
-	}
+func ExampleReplacePattern() {
+	egAsset(newAssetText("abcdef", ""), ReplacePattern(`abc`, "x"))
+	// Output:
+	// xdef
+}
+
+func ExampleStringFunc() {
+	egAsset(newAssetText("abcdef", ""), Str(str.ReplaceF("abc", "x", 1)))
+	// Output:
+	// xdef
 }
