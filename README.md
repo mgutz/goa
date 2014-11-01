@@ -29,7 +29,7 @@ var Verbose = false
 ```go
 type Asset struct {
 	bytes.Buffer
-	Info *gosu.FileAsset
+	Info *godo.FileAsset
 	// WritePath is the write destination of the asset.
 	WritePath string
 	Pipeline  *Pipeline

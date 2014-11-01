@@ -3,35 +3,33 @@ package main
 import (
 	"github.com/mgutz/goa"
 	f "github.com/mgutz/goa/filter"
-	"github.com/mgutz/godo"
+	. "github.com/mgutz/godo"
 )
 
 // Project is godo's project function.
-func Project(p *godo.Project) {
+func Tasks(p *Project) {
 	p.Task("default", []string{"add-headers", "bundle-scripts"})
 
 	p.Task("add-headers", func() {
-		pipeline := goa.NewPipeline()
-		pipeline.Pipe(
+		goa.Pipe(
 			f.Load("test/**/*.txt"),
 			f.AddHeader("COPYRIGHT\n"),
 			f.ReplacePath("test", "dist"),
 			f.Write(),
-		).Run()
+		)
 	})
 
 	p.Task("bundle-scripts", func() {
-		pipeline := goa.NewPipeline()
-		pipeline.Pipe(
+		goa.Pipe(
 			f.Load("test/**/*.js"),
 			f.Cat(";", "dist/bundle.js"),
 			f.AddHeader("COPYRIGHT\n"),
 			f.ReplacePath("test", "dist"),
 			f.Write(),
-		).Run()
+		)
 	})
 }
 
 func main() {
-	godo.Run(Project)
+	Godo(Tasks)
 }

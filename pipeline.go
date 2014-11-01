@@ -1,9 +1,10 @@
 package goa
 
 import (
-	"github.com/mgutz/gosu/util"
+	"github.com/mgutz/godo/util"
 )
 
+// Verbose indicates whether to log verbosely
 var Verbose = false
 
 // Pipeline is a asset flow through which each asset is processed by

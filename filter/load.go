@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 
 	"github.com/mgutz/goa"
-	"github.com/mgutz/gosu"
+	"github.com/mgutz/godo"
 )
 
 // Load loads all the files from glob patterns and creates the initial
@@ -13,7 +13,7 @@ import (
 // with large files.
 func Load(patterns ...string) func(*goa.Pipeline) error {
 	return func(pipeline *goa.Pipeline) error {
-		fileAssets, _, err := gosu.Glob(patterns)
+		fileAssets, _, err := godo.Glob(patterns)
 		if err != nil {
 			return err
 		}
