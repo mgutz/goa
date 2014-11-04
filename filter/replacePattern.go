@@ -4,7 +4,6 @@ import (
 	"regexp"
 
 	"github.com/mgutz/goa"
-	//"github.com/mgutz/godo/util"
 )
 
 // ReplacePattern replaces the leading part of a path in all assets.

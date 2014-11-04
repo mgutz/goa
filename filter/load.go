@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 
 	"github.com/mgutz/goa"
-	"github.com/mgutz/godo"
+	"gopkg.in/godo.v1"
 )
 
 // Load loads all the files from glob patterns and creates the initial

@@ -1,9 +1,10 @@
 package filter
 
 import (
-	"github.com/mgutz/goa"
-	"github.com/mgutz/godo/util"
 	"strings"
+
+	"github.com/mgutz/goa"
+	"gopkg.in/godo.v1/util"
 )
 
 // ReplacePath replaces the leading part of a path in all assets.

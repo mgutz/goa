@@ -1,7 +1,7 @@
 package goa
 
 import (
-	"github.com/mgutz/godo/util"
+	"gopkg.in/godo.v1/util"
 )
 
 // Verbose indicates whether to log verbosely

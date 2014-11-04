@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/mgutz/goa"
 	f "github.com/mgutz/goa/filter"
-	. "github.com/mgutz/godo"
 	"github.com/mgutz/str"
+	. "gopkg.in/godo.v1"
 )
 
 // Project is the local project.

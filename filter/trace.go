@@ -2,7 +2,7 @@ package filter
 
 import (
 	"github.com/mgutz/goa"
-	"github.com/mgutz/godo/util"
+	"gopkg.in/godo.v1/util"
 )
 
 // Trace traces an asset, printing key properties of asset to the console.

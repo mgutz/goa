@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"path"
 
-	"github.com/mgutz/godo"
+	"gopkg.in/godo.v1"
 )
 
 // Asset is any file which can be loaded and processed by a filter.

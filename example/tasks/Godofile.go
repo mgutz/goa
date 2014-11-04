@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/mgutz/goa"
 	f "github.com/mgutz/goa/filter"
-	. "github.com/mgutz/godo"
+	. "gopkg.in/godo.v1"
 )
 
 // Project is godo's project function.
