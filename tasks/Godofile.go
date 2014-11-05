@@ -9,7 +9,7 @@ import (
 
 // Project is the local project.
 func Tasks(p *Project) {
-	p.Task("dist", []string{"lint", "readme"})
+	p.Task("dist", D{"lint", "readme"})
 
 	p.Task("lint", func() {
 		Run("golint .")
