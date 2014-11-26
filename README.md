@@ -1,6 +1,6 @@
 # goa
 
-[godoc](https://godoc.org/github.com/mgutz/str)
+[godoc](https://godoc.org/github.com/mgutz/goa)
 
     import "github.com/mgutz/goa"
 
